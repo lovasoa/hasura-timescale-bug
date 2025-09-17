@@ -1,0 +1,36 @@
+services:
+  postgres:
+    image: timescale/timescaledb:2.22.0-pg17
+    ports:
+      - "5433:5432"
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: postgrespassword
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./postgresql.conf:/etc/postgresql/postgresql.conf
+    command: postgres -c config_file=/etc/postgresql/postgresql.conf
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres -h 127.0.0.1"]
+      interval: 6s
+      timeout: 300s
+      retries: 20
+  graphql-engine:
+    image: hasura/graphql-engine:v2.48.5.cli-migrations-v3
+    ports:
+      - "8081:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: always
+    environment:
+      HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:postgrespassword@postgres:5432/postgres
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "true"
+      HASURA_GRAPHQL_DEV_MODE: "true"
+      HASURA_GRAPHQL_ADMIN_SECRET: myadminsecretkey
+      HASURA_GRAPHQL_METADATA_DIR: "/hasura/metadata"
+    volumes:
+      - ./hasura:/hasura
+volumes:
+  db_data:
