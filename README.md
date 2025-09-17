@@ -76,6 +76,8 @@ FROM
   ) AS "_root"
 ```
 
+Execution time: 1.429 ms
+
 #### Query plan
 
 ```
@@ -123,6 +125,8 @@ LEFT OUTER JOIN LATERAL
     ) AS "__fld_resp"
 ON ('true')
 ```
+
+Execution time: 311.832 ms
 
 #### Query plan
 

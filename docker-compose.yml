@@ -30,6 +30,7 @@ services:
       HASURA_GRAPHQL_DEV_MODE: "true"
       HASURA_GRAPHQL_ADMIN_SECRET: myadminsecretkey
       HASURA_GRAPHQL_METADATA_DIR: "/hasura/metadata"
+      HASURA_GRAPHQL_LOG_LEVEL: debug
     volumes:
       - ./hasura:/hasura
 volumes:
